@@ -37,16 +37,17 @@
                 android:padding="@dimen/_5sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/owners_id" />
 
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/owners_id">
+                app:layout_constraintTop_toBottomOf="@+id/price">
 
                 <Button
                     android:id="@+id/delete"
@@ -54,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:text="حذف"
+                    android:text=" delete"
                     android:visibility="gone"
                     app:backgroundTint="@color/red" />
 
@@ -64,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:text="اضافة" />
+                    android:text="add" />
 
                 <Button
                     android:id="@+id/edit"
@@ -72,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:text="تعديل"
+                    android:text=" edit"
                     android:visibility="gone" />
             </LinearLayout>
 
@@ -80,10 +81,9 @@
                 android:id="@+id/materials_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
                 app:layout_constraintEnd_toEndOf="@+id/price"
                 app:layout_constraintStart_toStartOf="@+id/price"
-                app:layout_constraintTop_toBottomOf="@+id/price" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
                 android:id="@+id/owners_id"

@@ -32,18 +32,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 @SuppressLint("NonConstantResourceId")
-public class OutlayFragment extends Fragment {
+public class OutlayFragment extends Fragment implements View.OnClickListener, AdapterOutlay.OnItemClicked {
 
     @BindView(R.id.materials_id)
     Spinner spinnerMaterials;
     @BindView(R.id.owners_id)
     Spinner spinnerOwners;
-    @BindView(R.id.delete)
-    Button delete;
     @BindView(R.id.add)
     Button addMaterial;
     @BindView(R.id.edit)
     Button edit;
+    @BindView(R.id.delete)
+    Button delete;
+
     @BindView(R.id.price)
     EditText price;
     @BindView(R.id.recycler)
@@ -63,6 +64,8 @@ public class OutlayFragment extends Fragment {
     int selectedMaterialId;
     int selectedOwnerId;
 
+    MainActivity mainActivity;
+
     View view;
 
     @Override
@@ -70,23 +73,20 @@ public class OutlayFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_outlay, container, false);
         ButterKnife.bind(this, view);
         db = DataBaseAccess.getInstance(requireContext());
+        mainActivity = (MainActivity) requireActivity();
 
         getDataFromDB();
 
         initSpinners();
 
-        listeners();
 
+        addMaterial.setOnClickListener(this);
+        edit.setOnClickListener(this);
+        delete.setOnClickListener(this);
         return view;
     }
 
-    void listeners() {
-        addMaterial.setOnClickListener(addListener);
-        edit.setOnClickListener(editListener);
-        delete.setOnClickListener(deleteListener);
-    }
 
-    //region spinners
     private void initSpinners() {
         ArrayAdapter<String> a1 =
                 new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, m_ids);
@@ -126,8 +126,6 @@ public class OutlayFragment extends Fragment {
                 }
             };
 
-    //endregion
-
     void getDataFromDB() {
 
         this.materials = db.getAlMaterial();
@@ -141,86 +139,16 @@ public class OutlayFragment extends Fragment {
         for (Owner owner : this.owners)
             ow_ids.add(owner.name);
 
-        initAdapter(db.getAllOutlayJoin());
-    }
-
-    void initAdapter(ArrayList<OutlayJoin> list) {
         if (adapter == null)
-            adapter = new AdapterOutlay(requireActivity(), list);
+            adapter = new AdapterOutlay(requireActivity(), db.getAllOutlayJoin());
         else
-            adapter.setAndRefresh(list);
+            adapter.setAndRefresh(db.getAllOutlayJoin());
 
-        adapter.setOnItemClicked(onItemClicked);
+        adapter.setOnItemClicked(this);
 
-        initRecycler();
-    }
-
-    void initRecycler() {
         recycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         recycler.setAdapter(adapter);
     }
-
-
-    private final View.OnClickListener addListener = v -> {
-
-        if (checkFields()) {
-
-            Outlay model = getOutlay();
-
-            if (db == null)
-                return;
-
-            boolean test = db.insertOutlay(model);
-            if (test) {
-                getDataFromDB();
-                Toast.makeText(requireContext(), " added", Toast.LENGTH_SHORT).show();
-                restFields();
-            }
-        }
-    };
-
-    private final View.OnClickListener editListener = v -> {
-        if (!checkFields())
-            return;
-
-        outlayJoin.price = Float.parseFloat(price.getText().toString());
-
-        outlayJoin.outlay_description = "";
-
-        outlayJoin.materialId = this.selectedMaterialId;
-        outlayJoin.ownerId = this.selectedOwnerId;
-
-        if (db.updateOutlay(outlayJoin)) {
-            restFields();
-            getDataFromDB();
-            Toast.makeText(requireContext(), "done edit", Toast.LENGTH_SHORT).show();
-        }
-
-        edit.setVisibility(View.GONE);
-        delete.setVisibility(View.GONE);
-    };
-
-    private final View.OnClickListener deleteListener = v -> {
-        if (db.deleteOutlay(this.outlayJoin.id)) {
-            adapter.deleteItem(idAdapter);
-            restFields();
-        }
-        edit.setVisibility(View.GONE);
-        delete.setVisibility(View.GONE);
-    };
-
-    private final AdapterOutlay.OnItemClicked onItemClicked = (position, list) -> {
-
-        if (edit.getVisibility() != View.VISIBLE)
-            edit.setVisibility(View.VISIBLE);
-
-        if (delete.getVisibility() != View.VISIBLE)
-            delete.setVisibility(View.VISIBLE);
-
-        idAdapter = position;
-
-        setFields(list.get(position));
-    };
 
 
     private Outlay getOutlay() {
@@ -229,18 +157,18 @@ public class OutlayFragment extends Fragment {
                 selectedOwnerId,
                 Integer.parseInt(price.getText().toString()),
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
-                Calendar.getInstance().get(Calendar.MONTH)+1,
+                Calendar.getInstance().get(Calendar.MONTH) + 1,
                 Calendar.getInstance().get(Calendar.YEAR),
                 "");
     }
 
-    void restFields() {
+    void restViews() {
         price.setText(null);
         spinnerMaterials.setSelection(0);
         spinnerOwners.setSelection(0);
     }
 
-    void setFields(OutlayJoin outlayJoin) {
+    void initViews(OutlayJoin outlayJoin) {
 
         this.outlayJoin = outlayJoin;
 
@@ -251,7 +179,7 @@ public class OutlayFragment extends Fragment {
 
     }
 
-    private boolean checkFields() {
+    boolean checkFields() {
         if (price.getText().toString().isEmpty()) {
             price.setError("");
             return false;
@@ -261,4 +189,72 @@ public class OutlayFragment extends Fragment {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.add: {
+                if (checkFields()) {
+
+                    Outlay model = getOutlay();
+
+                    if (db == null)
+                        return;
+
+                    boolean test = db.insertOutlay(model);
+                    if (test) {
+                        getDataFromDB();
+                        Toast.makeText(requireContext(), " added", Toast.LENGTH_SHORT).show();
+                        restViews();
+                    }
+                }
+                break;
+            }
+            case R.id.edit: {
+                if (!checkFields())
+                    return;
+
+                outlayJoin.price = Float.parseFloat(price.getText().toString());
+
+                outlayJoin.outlay_description = "";
+
+                outlayJoin.materialId = this.selectedMaterialId;
+                outlayJoin.ownerId = this.selectedOwnerId;
+
+                if (db.updateOutlay(outlayJoin)) {
+                    restViews();
+                    getDataFromDB();
+                    Toast.makeText(requireContext(), "done edit", Toast.LENGTH_SHORT).show();
+                }
+
+                edit.setVisibility(View.GONE);
+                delete.setVisibility(View.GONE);
+                break;
+            }
+            case R.id.delete: {
+                if (db.deleteOutlay(this.outlayJoin.id)) {
+                    adapter.deleteItem(idAdapter);
+                    restViews();
+                }
+                edit.setVisibility(View.GONE);
+                delete.setVisibility(View.GONE);
+                break;
+            }
+
+        }
+    }
+
+    @Override
+    public void onClicked(int position, ArrayList<OutlayJoin> list) {
+
+        if (edit.getVisibility() != View.VISIBLE)
+            edit.setVisibility(View.VISIBLE);
+
+        if (delete.getVisibility() != View.VISIBLE)
+            delete.setVisibility(View.VISIBLE);
+
+        idAdapter = position;
+
+        initViews(list.get(position));
+    }
 }

@@ -22,13 +22,12 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class outlayServiceFragment extends Fragment {
+public class OutlayServiceFragment extends Fragment {
 
     @BindView(R.id.recycler)
     RecyclerView recycler;
     @BindView(R.id.count)
     TextView count;
-
 
     View view;
 
@@ -44,7 +43,6 @@ public class outlayServiceFragment extends Fragment {
         db = DataBaseAccess.getInstance(requireContext());
 
         getDataFromDB();
-
 
         return view;
     }

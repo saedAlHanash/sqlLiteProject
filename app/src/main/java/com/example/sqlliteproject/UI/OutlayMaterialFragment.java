@@ -35,13 +35,10 @@ public class OutlayMaterialFragment extends Fragment {
     @BindView(R.id.count)
     TextView count;
 
-
-    View view;
-
     DataBaseAccess db;
-
     AdapterOutlay adapter;
 
+    View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,30 +52,21 @@ public class OutlayMaterialFragment extends Fragment {
         return view;
     }
 
-    void getDataFromDB() {
-        initAdapter(db.getMaterialOutlay(0));
-    }
-
-
     @SuppressLint("SetTextI18n")
-    void initAdapter(ArrayList<OutlayJoin> list) {
-
+    void getDataFromDB() {
         float count1 = 0;
-        for (OutlayJoin outlayJoin : list) {
+        for (OutlayJoin outlayJoin : db.getMaterialOutlay(0)) {
             count1 += outlayJoin.price;
         }
         count.setText("المجموع :" + count1);
 
         if (adapter == null)
-            adapter = new AdapterOutlay(requireActivity(), list);
+            adapter = new AdapterOutlay(requireActivity(), db.getMaterialOutlay(0));
         else
-            adapter.setAndRefresh(list);
+            adapter.setAndRefresh(db.getMaterialOutlay(0));
 
-        initRecycler();
-    }
-
-    void initRecycler() {
         recycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         recycler.setAdapter(adapter);
     }
+
 }

@@ -23,7 +23,6 @@ public class DataBaseAccess {
     SQLiteDatabase dataBase;
     SQLiteOpenHelper openHelper;
 
-
     private static DataBaseAccess instance;
 
     private DataBaseAccess(Context context) {
@@ -51,6 +50,7 @@ public class DataBaseAccess {
     }
 
     //region insert
+
     public boolean insertMaterial(Material material) {
         openWritable();
         ContentValues values = addMaterialHelper(material);
@@ -310,6 +310,7 @@ public class DataBaseAccess {
         Cursor cursor;
 
         cursor = dataBase.rawQuery(
+
                 "SELECT " + TableMaterial.TABLE_NAME + "." + TableMaterial.NAME + "[materialName]" +
                         " , " + TableOutlayOwner.TABLE_NAME + "." + TableOutlayOwner.NAME + "[ownerName]" +
                         " , " + TableOutlay.TABLE_NAME + "." + TableOutlay.PRICE +
@@ -593,6 +594,7 @@ public class DataBaseAccess {
     }
 
     private ContentValues addOutlayHelper(Outlay outlay) {
+
         ContentValues values = new ContentValues();
 
         values.put(TableOutlay.MATERIAL_ID, outlay.materialId);

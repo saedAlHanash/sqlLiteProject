@@ -28,19 +28,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="is service"
-                app:layout_constraintEnd_toEndOf="@+id/description"
                 app:layout_constraintStart_toStartOf="@+id/description"
                 app:layout_constraintTop_toBottomOf="@+id/description" />
 
             <EditText
                 android:id="@+id/description"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/_70sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
-                android:background="@drawable/rounded_shape"
-                android:backgroundTint="@color/white"
+
                 android:ems="10"
                 android:gravity="clip_vertical"
                 android:hint="description"
@@ -58,8 +56,6 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
-                android:background="@drawable/rounded_shape"
-                android:backgroundTint="@color/white"
                 android:ems="10"
                 android:hint="name"
                 android:inputType="textPersonName"
@@ -84,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:text="حذف"
+                    android:text=" delete"
                     android:visibility="gone"
                     app:backgroundTint="@color/red" />
 
@@ -94,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:text="اضافة" />
+                    android:text="add" />
 
                 <Button
                     android:id="@+id/edit"
@@ -102,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:text="تعديل"
+                    android:text=" edit"
                     android:visibility="gone" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

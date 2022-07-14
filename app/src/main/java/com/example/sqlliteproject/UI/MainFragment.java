@@ -1,5 +1,6 @@
 package com.example.sqlliteproject.UI;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,15 +9,15 @@ import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.sqlliteproject.DataBases.FTH;
+
 import com.example.sqlliteproject.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainFragment extends Fragment {
+@SuppressLint("NonConstantResourceId")
+public class MainFragment extends Fragment implements View.OnClickListener {
 
-    View view;
     @BindView(R.id.material)
     Button material;
     @BindView(R.id.owner)
@@ -25,47 +26,44 @@ public class MainFragment extends Fragment {
     Button outlay;
     @BindView(R.id.log)
     Button log;
+    MainActivity mainActivity;
+
+    View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
+        mainActivity = (MainActivity) requireActivity();
 
-        listeners();
+        material.setOnClickListener(this);
+        owner.setOnClickListener(this);
+        outlay.setOnClickListener(this);
+        log.setOnClickListener(this);
 
         return view;
     }
 
-    void listeners() {
-        //اضافة مواد
-        material.setOnClickListener(materialListener);
-        //اضافة مالك
-        owner.setOnClickListener(ownerListener);
-        //اضافة مصروف
-        outlay.setOnClickListener(outlayListener);
-        // التقارير
-        log.setOnClickListener(logListener);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.material: {
+                mainActivity.addFragment(new MaterialFragment());
+                break;
+            }
+            case R.id.owner: {
+                mainActivity.addFragment(new OwnerFragment());
+                break;
+            }
+            case R.id.outlay: {
+                mainActivity.addFragment(new OutlayFragment());
+                break;
+            }
+            case R.id.log: {
+                mainActivity.addFragment(new LogFragment());
+                break;
+            }
+        }
     }
-
-    //اضافة مواد
-    private final View.OnClickListener materialListener = v -> {
-        FTH.addToStakeFragment(R.id.FCV, requireActivity(), new MaterialFragment(), "m_fn");
-    };
-
-    //اضافة مالك
-    private final View.OnClickListener ownerListener = v -> {
-        FTH.addToStakeFragment(R.id.FCV, requireActivity(), new OwnerFragment(), "o_fn");
-    };
-
-    //اضافة مصروف
-    private final View.OnClickListener outlayListener = v -> {
-        FTH.addToStakeFragment(R.id.FCV, requireActivity(), new OutlayFragment(), "ol_fn");
-    };
-
-    // التقارير
-    private final View.OnClickListener logListener = v -> {
-        FTH.addToStakeFragment(R.id.FCV, requireActivity(), new LogFragment(), "logfn");
-    };
-
-
 }

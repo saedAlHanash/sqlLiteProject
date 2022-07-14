@@ -21,7 +21,6 @@
         android:id="@+id/count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/bangers"
         android:textColor="@color/black"
         android:textSize="@dimen/_14ssp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,29 +31,30 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="@dimen/_5sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/go"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_5sdp"
-            android:layout_weight="1"
-            android:text="Button" />
-
         <EditText
             android:id="@+id/month"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="شهر أو عام"
+            android:hint="month/year"
             android:inputType="number"
             android:maxLength="4" />
+
+        <Button
+            android:id="@+id/go"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:text="go" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.example.sqlliteproject.Adadpters.AdapterOutlay;
 import com.example.sqlliteproject.DataBases.DataBaseAccess;
-import com.example.sqlliteproject.DataBases.FTH;
+
 import com.example.sqlliteproject.DataBases.Models.Material;
 import com.example.sqlliteproject.DataBases.Models.OutlayJoin;
 import com.example.sqlliteproject.DataBases.Models.Owner;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OutlayOwnerFragment extends Fragment {
+public class OutlayOwnerFragment extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.owners_id)
     Spinner spinnerOwners;
@@ -66,13 +66,7 @@ public class OutlayOwnerFragment extends Fragment {
 
         initSpinners();
 
-        go.setOnClickListener(v -> {
-
-            if (selectedOwnerId < 0)
-                return;
-            initAdapter(db.getOwnerOutlay(selectedOwnerId));
-
-        });
+        go.setOnClickListener(this);
 
         return view;
     }
@@ -134,5 +128,14 @@ public class OutlayOwnerFragment extends Fragment {
     void initRecycler() {
         recycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         recycler.setAdapter(adapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (selectedOwnerId < 0)
+            return;
+
+        initAdapter(db.getOwnerOutlay(selectedOwnerId));
     }
 }

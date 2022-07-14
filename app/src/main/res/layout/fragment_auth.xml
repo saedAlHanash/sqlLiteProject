@@ -1,84 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:gravity="center"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/_10sdp"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".UI.AuthFragment">
-    <TextView
-        android:id="@+id/sing_in_txt_bold"
-        android:layout_width="371dp"
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/bangers"
-        android:gravity="center"
-        android:text="Hello there"
-        android:textColor="#000"
-        android:textSize="30sp" />
+        android:ems="10"
+        android:hint="userName"
+        android:inputType="textPersonName" />
 
-    <TextView
-        android:id="@+id/sing_in_text_view"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editTextTextPassword"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="8dp"
-        android:fontFamily="@font/capriola"
-        android:text="login"
-        android:textSize="25sp" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/sing_in_user_box"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="342dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="10dp"
-        android:hint="username"
-        app:boxStrokeColor="@color/main_color_dark"
-        app:hintAnimationEnabled="true"
-        app:hintTextColor="@color/light_gray"
-
-        >
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/sing_in_user_name"
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            android:layout_gravity="center"
-            android:drawablePadding="3dp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/sing_in_pass_box"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="342dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="35dp"
+        android:ems="10"
         android:hint="password"
-        app:boxStrokeColor="@color/main_color_dark"
-        app:hintTextColor="@color/light_gray"
-        app:passwordToggleEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-
-            android:id="@+id/sing_in_password"
-            android:layout_width="match_parent"
-            android:layout_height="51dp"
-            android:layout_gravity="center"
-            android:drawablePadding="3dp"
-            android:inputType="textPassword" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:inputType="textPassword" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/login"
@@ -86,7 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/_10sdp"
-        android:background="@drawable/button_selector"
+        android:background="@drawable/rounded_shape"
+        android:backgroundTint="@color/main_color_dark"
         android:elevation="@dimen/_10sdp"
         android:gravity="center"
         android:text="login"

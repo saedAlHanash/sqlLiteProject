@@ -26,14 +26,14 @@ import butterknife.ButterKnife;
 
 
 @SuppressLint("NonConstantResourceId")
-public class MaterialFragment extends Fragment {
+public class MaterialFragment extends Fragment implements View.OnClickListener, AdapterMaterial.OnItemClicked {
 
     @BindView(R.id.add_material)
     Button addMaterial;
-    @BindView(R.id.delete)
-    Button delete;
     @BindView(R.id.edit)
     Button edit;
+    @BindView(R.id.delete)
+    Button delete;
     @BindView(R.id.switch1)
     Switch switch1;
     @BindView(R.id.description)
@@ -43,111 +43,53 @@ public class MaterialFragment extends Fragment {
     @BindView(R.id.recycler)
     RecyclerView recycler;
 
-    DataBaseAccess db;
+    DataBaseAccess dataBase;
     AdapterMaterial adapter;
     Material material;
-    int idAdapter;
 
+    int idselected;
+
+    MainActivity mainActivity;
     View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_material, container, false);
         ButterKnife.bind(this, view);
-        db = DataBaseAccess.getInstance(requireContext());
+
+        mainActivity = (MainActivity) requireActivity();
+
+        dataBase = DataBaseAccess.getInstance(requireContext());
+
         getDataFromDB();
 
-        listeners();
+        addMaterial.setOnClickListener(this);
+        edit.setOnClickListener(this);
+        delete.setOnClickListener(this);
 
         return view;
     }
 
-    void listeners() {
-        addMaterial.setOnClickListener(addListener);
-        edit.setOnClickListener(editListener);
-        delete.setOnClickListener(deleteListener);
-    }
+    void getDataFromDB() {
 
-    void initAdapter(ArrayList<Material> list) {
         if (adapter == null)
-            adapter = new AdapterMaterial(requireActivity(), list);
+            adapter = new AdapterMaterial(requireActivity(), dataBase.getAlMaterial());
         else
-            adapter.setAndRefresh(list);
-        adapter.setOnItemClicked(onItemClicked);
-        initRecycler();
-    }
+            adapter.setAndRefresh(dataBase.getAlMaterial());
 
-    void initRecycler() {
+        adapter.setOnItemClicked(this);
+
         recycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         recycler.setAdapter(adapter);
     }
 
-    void getDataFromDB() {
-        initAdapter(db.getAlMaterial());
-    }
-
-    private final View.OnClickListener addListener = v -> {
-        if (checkFields()) {
-            Material material = new Material(name.getText().toString(),
-                    description.getText().toString(), switch1.isChecked());
-
-            if (db == null)
-                return;
-
-            boolean test = db.insertMaterial(material);
-            if (test) {
-                adapter.insertItem(material);
-                getDataFromDB();
-                Toast.makeText(requireContext(), "material added", Toast.LENGTH_SHORT).show();
-                restFields();
-            }
-        }
-
-    };
-
-    private final View.OnClickListener editListener = v -> {
-        if (!checkFields())
-            return;
-
-        material.name = name.getText().toString();
-        material.isService = switch1.isChecked();
-        material.description = description.getText().toString();
-
-        if (db.updateMaterial(material)) {
-            restFields();
-            adapter.editItem(idAdapter, material);
-            Toast.makeText(requireContext(), "done edit", Toast.LENGTH_SHORT).show();
-        }
-        edit.setVisibility(View.GONE);
-        delete.setVisibility(View.GONE);
-    };
-
-    private final View.OnClickListener deleteListener = v -> {
-        if (db.deleteMaterial(this.material)) {
-            adapter.deleteItem(idAdapter);
-            restFields();
-        }
-        edit.setVisibility(View.GONE);
-        delete.setVisibility(View.GONE);
-    };
-
-    private final AdapterMaterial.OnItemClicked onItemClicked = (position, list) -> {
-        if (edit.getVisibility() != View.VISIBLE)
-            edit.setVisibility(View.VISIBLE);
-        if (delete.getVisibility() != View.VISIBLE)
-            delete.setVisibility(View.VISIBLE);
-
-        idAdapter = position;
-        setFields(list.get(position));
-    };
-
-    void restFields() {
+    void restViews() {
         name.setText(null);
         description.setText(null);
         switch1.setChecked(false);
     }
 
-    void setFields(Material material) {
+    void initViews(Material material) {
         this.material = material;
         name.setText(material.name);
         description.setText(material.description);
@@ -164,4 +106,66 @@ public class MaterialFragment extends Fragment {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.add_material: {
+                if (checkFields()) {
+                    Material material = new Material(name.getText().toString(),
+                            description.getText().toString(), switch1.isChecked());
+
+                    if (dataBase == null)
+                        return;
+
+                    boolean test = dataBase.insertMaterial(material);
+                    if (test) {
+                        adapter.insertItem(material);
+                        getDataFromDB();
+                        Toast.makeText(requireContext(), "material added", Toast.LENGTH_SHORT).show();
+                        restViews();
+                    }
+                }
+                break;
+            }
+            case R.id.edit: {
+                if (!checkFields())
+                    return;
+
+                material.name = name.getText().toString();
+                material.isService = switch1.isChecked();
+                material.description = description.getText().toString();
+
+                if (dataBase.updateMaterial(material)) {
+                    restViews();
+                    adapter.editItem(idselected, material);
+                    Toast.makeText(requireContext(), "done edit", Toast.LENGTH_SHORT).show();
+                }
+                edit.setVisibility(View.GONE);
+                delete.setVisibility(View.GONE);
+                break;
+            }
+            case R.id.delete: {
+                if (dataBase.deleteMaterial(this.material)) {
+                    adapter.deleteItem(idselected);
+                    restViews();
+                }
+                edit.setVisibility(View.GONE);
+                delete.setVisibility(View.GONE);
+                break;
+            }
+
+        }
+    }
+
+    @Override
+    public void onClicked(int position, ArrayList<Material> list) {
+        if (edit.getVisibility() != View.VISIBLE)
+            edit.setVisibility(View.VISIBLE);
+        if (delete.getVisibility() != View.VISIBLE)
+            delete.setVisibility(View.VISIBLE);
+
+        idselected = position;
+        initViews(list.get(position));
+    }
 }

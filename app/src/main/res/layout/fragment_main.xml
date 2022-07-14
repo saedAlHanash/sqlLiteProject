@@ -6,59 +6,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_10sdp"
-        app:cardElevation="@dimen/_3sdp"
-        app:cardBackgroundColor="@color/light_gray"
-        app:cardCornerRadius="@dimen/_7sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
+        android:padding="@dimen/_10sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <Button
+            android:id="@+id/owner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_10sdp"
-            android:orientation="vertical">
+            android:layout_margin="20dp"
 
-            <Button
-                android:id="@+id/material"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="@drawable/button_selector"
-                android:fontFamily="sans-serif-black"
-                android:text="إضافة مواد أو تعديلها" />
+            android:fontFamily="sans-serif-black"
+            android:text="add owner " />
 
-            <Button
-                android:id="@+id/owner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="@drawable/button_selector"
-                android:fontFamily="sans-serif-black"
-                android:text="إضافة مالك مصروف أو تعديله" />
+        <Button
+            android:id="@+id/outlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
 
-            <Button
-                android:id="@+id/outlay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="@drawable/button_selector"
-                android:fontFamily="sans-serif-black"
-                android:text="إضافة مصروف أو تعديله" />
+            android:fontFamily="sans-serif-black"
+            android:text="add outlay" />
 
-            <Button
-                android:id="@+id/log"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="@drawable/button_selector"
-                android:fontFamily="sans-serif-black"
-                android:text="التقارير" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+        <Button
+            android:id="@+id/material"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+
+            android:fontFamily="sans-serif-black"
+            android:text="add meterial" />
+
+        <Button
+            android:id="@+id/log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+
+            android:fontFamily="sans-serif-black"
+            android:text="reports" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

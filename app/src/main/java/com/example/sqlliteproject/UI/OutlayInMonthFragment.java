@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OutlayInMonthFragment extends Fragment {
+public class OutlayInMonthFragment extends Fragment implements View.OnClickListener {
 
     View view;
 
@@ -33,38 +33,32 @@ public class OutlayInMonthFragment extends Fragment {
     TextView count;
 
     AdapterOutlay adapter;
-    DataBaseAccess DB;
+    DataBaseAccess dataBase;
 
     @BindView(R.id.go)
-    Button go;
+    Button mDo;
     @BindView(R.id.month)
     EditText month;
+
+    MainActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_outlay_in_month, container, false);
         ButterKnife.bind(this, view);
-        DB = DataBaseAccess.getInstance(requireContext());
+        dataBase = DataBaseAccess.getInstance(requireContext());
+        mainActivity = (MainActivity) requireActivity();
 
-
-        go.setOnClickListener(v -> {
-            String m = month.getText().toString();
-            if (m.isEmpty())
-                return;
-
-            int month = Integer.parseInt(m);
-            getDataFromDB(month);
-
-        });
+        mDo.setOnClickListener(this);
 
         return view;
     }
 
     void getDataFromDB(int c) {
         if (c <= 12)
-            initAdapter(DB.getMonthJoin(c));
+            initAdapter(dataBase.getMonthJoin(c));
         else
-            initAdapter(DB.getYearJoin(c));
+            initAdapter(dataBase.getYearJoin(c));
     }
 
 
@@ -72,9 +66,9 @@ public class OutlayInMonthFragment extends Fragment {
     void initAdapter(ArrayList<OutlayJoin> list) {
 
         float count1 = 0;
-        for (OutlayJoin outlayJoin : list) {
+        for (OutlayJoin outlayJoin : list)
             count1 += outlayJoin.price;
-        }
+
         count.setText("المجموع :" + count1);
 
         if (adapter == null)
@@ -90,4 +84,13 @@ public class OutlayInMonthFragment extends Fragment {
         recycler.setAdapter(adapter);
     }
 
+    @Override
+    public void onClick(View v) {
+        String m = month.getText().toString();
+        if (m.isEmpty())
+            return;
+
+        int month = Integer.parseInt(m);
+        getDataFromDB(month);
+    }
 }

@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/rounded_shape"
+    android:elevation="@dimen/_3sdp"
+    android:layout_margin="@dimen/_5sdp"
     android:orientation="vertical"
     android:padding="@dimen/_5sdp">
 
@@ -37,11 +40,4 @@
         android:textColor="@color/black"
         android:textSize="@dimen/_12ssp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
-        android:background="@drawable/line_horizontal"
-        android:backgroundTint="@color/main_color_dark" />
 </LinearLayout>

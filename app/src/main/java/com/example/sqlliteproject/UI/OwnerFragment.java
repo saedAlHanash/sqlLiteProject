@@ -25,14 +25,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 @SuppressLint("NonConstantResourceId")
-public class OwnerFragment extends Fragment {
+public class OwnerFragment extends Fragment implements View.OnClickListener,AdapterOwner.OnItemClicked {
 
-    @BindView(R.id.delete)
-    Button delete;
+
     @BindView(R.id.add)
     Button addMaterial;
     @BindView(R.id.edit)
     Button edit;
+    @BindView(R.id.delete)
+    Button delete;
     @BindView(R.id.description)
     EditText description;
     @BindView(R.id.name)
@@ -56,99 +57,26 @@ public class OwnerFragment extends Fragment {
 
         getDataFromDB();
 
-        listeners();
+        addMaterial.setOnClickListener(this);
+        edit.setOnClickListener(this);
+        delete.setOnClickListener(this);
 
         return view;
     }
 
-    void listeners() {
-        addMaterial.setOnClickListener(addListener);
-        edit.setOnClickListener(editListener);
-        delete.setOnClickListener(deleteListener);
-    }
 
-    void initAdapter(ArrayList<Owner> list) {
+    void getDataFromDB() {
+
         if (adapter == null)
-            adapter = new AdapterOwner(requireActivity(), list);
+            adapter = new AdapterOwner(requireActivity(), db.getAllOwners());
         else
-            adapter.setAndRefresh(list);
+            adapter.setAndRefresh(db.getAllOwners());
 
-        adapter.setOnItemClicked(onItemClicked);
+        adapter.setOnItemClicked(this);
 
-        initRecycler();
-    }
-
-    void initRecycler() {
         recycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         recycler.setAdapter(adapter);
     }
-
-    void getDataFromDB() {
-        initAdapter(db.getAllOwners());
-    }
-
-    private final View.OnClickListener addListener = v -> {
-        if (checkFields()) {
-
-            Owner owner = new Owner(name.getText().toString(), description.getText().toString());
-
-            if (db == null)
-                return;
-
-            boolean test = db.insertOwner(owner);
-
-            if (test) {
-                adapter.insertItem(owner);
-                getDataFromDB();
-                Toast.makeText(requireContext(), "added", Toast.LENGTH_SHORT).show();
-                restFields();
-            }
-        } else {
-            // TODO: 20/06/2022 handel onFailure
-        }
-
-    };
-
-    private final View.OnClickListener deleteListener = v -> {
-        if (db.deleteOwner(this.owner)) {
-            adapter.deleteItem(idAdapter);
-            restFields();
-        } else {
-            // TODO: 20/06/2022 handel onFailure
-        }
-        edit.setVisibility(View.GONE);
-        delete.setVisibility(View.GONE);
-    };
-
-    private final View.OnClickListener editListener = v -> {
-        if (!checkFields())
-            return;
-
-        this.owner.name = name.getText().toString();
-        this.owner.description = description.getText().toString();
-
-        edit.setVisibility(View.GONE);
-        delete.setVisibility(View.GONE);
-
-        if (db.updateOwner(owner)) {
-            restFields();
-            adapter.editItem(idAdapter, owner);
-            Toast.makeText(requireContext(), "done edit", Toast.LENGTH_SHORT).show();
-        } else {
-            // TODO: 20/06/2022 handel onFailure
-        }
-    };
-
-    private final AdapterOwner.OnItemClicked onItemClicked = (position, list) -> {
-        if (edit.getVisibility() != View.VISIBLE)
-            edit.setVisibility(View.VISIBLE);
-
-        if (delete.getVisibility() != View.VISIBLE)
-            delete.setVisibility(View.VISIBLE);
-
-        idAdapter = position;
-        setFields(list.get(position));
-    };
 
     void restFields() {
         name.setText(null);
@@ -171,4 +99,69 @@ public class OwnerFragment extends Fragment {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.add: {
+                if (checkFields()) {
+
+                    Owner owner = new Owner(name.getText().toString(), description.getText().toString());
+
+                    if (db == null)
+                        return;
+
+                    boolean test = db.insertOwner(owner);
+
+                    if (test) {
+                        adapter.insertItem(owner);
+                        getDataFromDB();
+                        Toast.makeText(requireContext(), "added", Toast.LENGTH_SHORT).show();
+                        restFields();
+                    }
+                }
+
+                break;
+            }
+            case R.id.edit: {
+                if (!checkFields())
+                    return;
+
+                this.owner.name = name.getText().toString();
+                this.owner.description = description.getText().toString();
+
+                edit.setVisibility(View.GONE);
+                delete.setVisibility(View.GONE);
+
+                if (db.updateOwner(owner)) {
+                    restFields();
+                    adapter.editItem(idAdapter, owner);
+                    Toast.makeText(requireContext(), "done edit", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            case R.id.delete: {
+                if (db.deleteOwner(this.owner)) {
+                    adapter.deleteItem(idAdapter);
+                    restFields();
+                }
+                edit.setVisibility(View.GONE);
+                delete.setVisibility(View.GONE);
+                break;
+            }
+
+        }
+    }
+
+    @Override
+    public void onClicked(int position, ArrayList<Owner> list) {
+        if (edit.getVisibility() != View.VISIBLE)
+            edit.setVisibility(View.VISIBLE);
+
+        if (delete.getVisibility() != View.VISIBLE)
+            delete.setVisibility(View.VISIBLE);
+
+        idAdapter = position;
+        setFields(list.get(position));
+    }
 }
